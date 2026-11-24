@@ -120,16 +120,4 @@ the size of the buffer that holds it.**
 
 ---
 
-## 6. Submission
-
-Submit a short write-up (half a page) with:
-
-1. A screenshot of `./login` granting access when you typed 9+ characters.
-2. One or two sentences explaining, in your own words, what got overwritten and
-   why that unlocked the program.
-3. The one-line fix you would make to `login.c`, and confirmation that the
-   attack no longer works after it.
-
----
-
 *This code is deliberately insecure and for learning only.*
