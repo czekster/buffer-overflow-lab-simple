@@ -12,8 +12,6 @@ debugger, no special tools — just compile and run.
   that shells out with your input, letting you smuggle in your own commands —
   then how OS permissions and least privilege contain the damage.
 
-> ⚠️ Change the badge URL below to your own `owner/repo` before publishing.
-
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/czekster/buffer-overflow-lab-simple)
 
 ## Start
