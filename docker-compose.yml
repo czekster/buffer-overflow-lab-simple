@@ -1,0 +1,17 @@
+# Optional: for students running Docker Desktop locally instead of Codespaces.
+# Uses the official gcc image directly (no build step, no Dockerfile).
+#
+#   docker compose run --rm lab
+#   # then, inside the container:
+#   make && ./login
+#
+# Codespaces users don't need this file at all -- the default image has gcc.
+services:
+  lab:
+    image: gcc:latest
+    working_dir: /lab
+    volumes:
+      - .:/lab
+    stdin_open: true
+    tty: true
+    command: bash
