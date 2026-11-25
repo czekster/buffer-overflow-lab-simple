@@ -55,13 +55,33 @@ Look past the `ls` output: you'll also see the result of **`id`** — a command
 started yours. Now try a few more:
 
 ```bash
+./fileinfo "; whoami"               # ; always runs the next command
 ./fileinfo "; cat /etc/passwd"      # read a system file
-./fileinfo "nothing && whoami"      # chain with &&
-./fileinfo '`id`'                   # backticks = "run this" (as in ShellShock)
+./fileinfo '; echo `id`'            # backticks = "run this" (as in ShellShock)
 ```
 
 Each one runs a command of your choosing. That's the whole vulnerability: the
 program handed your text to a shell, and the shell did what you said.
+
+**A word on the shell's operators** — they don't all behave the same, and it's
+worth knowing why:
+
+```bash
+./fileinfo "; whoami"                 # ;  -> run whoami no matter what
+./fileinfo "nothing || whoami"        # || -> run whoami BECAUSE ls failed
+./fileinfo "/etc/hostname && whoami"  # && -> run whoami BECAUSE ls succeeded
+```
+
+`;` always runs the next command; `&&` runs it only if the previous command
+*succeeded*; `||` runs it only if the previous command *failed*. So
+`"nothing && whoami"` looks like it "doesn't work" — `ls -l nothing` fails, so
+`&&` skips `whoami`. It's not that the injection failed; you just picked the
+operator that short-circuits. `;` is the reliable one to reach for.
+
+Backticks are different again: they substitute a command's *output* back into
+the line. `` ls -l `id` `` really does run `id` — then `ls` chokes trying to
+list "files" named after `id`'s output. That error is proof `id` ran; wrapping
+it as `` ; echo `id` `` just prints the output cleanly.
 
 > Make a secret and steal it — the "flag" moment:
 > ```bash
@@ -145,16 +165,3 @@ code (Fix #1) and confining the process (Fix #2) are two different layers — yo
 want both.
 
 ---
-
-## 7. Submission
-
-Submit a short write-up (half to one page) with:
-
-1. A screenshot of `./fileinfo "; id"` running your injected command.
-2. One or two sentences: what character made the injection possible, and why the
-   shell acted on it.
-3. The output of `; id` on your setup — are you root or a normal user? One
-   sentence on what that means for how much damage the injection could do.
-4. Your `fileinfo_safe.c` and confirmation that `"; id"` no longer injects.
-5. One sentence explaining why "run as a low-privilege user" is still worth doing
-   even after you've fixed the code.
